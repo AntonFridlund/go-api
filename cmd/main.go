@@ -15,9 +15,10 @@ func main() {
 	}
 
 	mainRouter := routes.NewRouter()
-	sizeLimit := http.MaxBytesHandler(mainRouter, 1*1024*1024) // 1MB limit
+	sizeLimit := http.MaxBytesHandler(mainRouter, 1*1024*1024)
 	logger := log.LogMiddleware(sizeLimit)
 
+	// Write log channel entries to stdout
 	go func() {
 		for logEntry := range log.LogChannel {
 			os.Stdout.Write([]byte(logEntry))
