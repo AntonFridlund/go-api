@@ -7,6 +7,7 @@ import (
 	"net/http"
 )
 
+// Initialize services and controllers
 var userService = serviceUser.NewUserService()
 var userController = controllerUser.NewUserController(userService)
 
