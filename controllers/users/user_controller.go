@@ -8,6 +8,7 @@ import (
 	"strconv"
 )
 
+// Represents the user controller
 type userController struct {
 	userService serviceUser.IUserService
 }

@@ -8,6 +8,7 @@ import (
 	"strconv"
 )
 
+// Represents the task controller
 type TaskController struct {
 	taskService serviceTask.ITaskService
 }
