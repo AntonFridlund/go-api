@@ -8,7 +8,6 @@ import (
 	"net/http"
 	"os"
 	"os/signal"
-	"strings"
 	"sync"
 	"syscall"
 	"time"
@@ -42,9 +41,9 @@ func main() {
 
 	// Start server in separate goroutine
 	go func() {
-		fmt.Println("Server started successfully")
-		msg := fmt.Sprintf("Listening to: %s:%s", host, port)
-		fmt.Printf("%s\n%s\n", msg, strings.Repeat("-", len(msg)))
+		fmt.Println("[INFO] Starting the server...")
+		fmt.Println("[INFO] Press Ctrl+C to stop the server")
+		fmt.Printf("[INFO] Listening on: http://%s:%s\n\n", host, port)
 		err := server.ListenAndServe()
 		if err != nil && err != http.ErrServerClosed {
 			fmt.Println("Error starting server:", err)
@@ -64,7 +63,7 @@ func main() {
 	stop := make(chan os.Signal, 1)
 	signal.Notify(stop, os.Interrupt, syscall.SIGTERM)
 	<-stop
-	fmt.Println("Received shutdown signal")
+	fmt.Println("\nReceived shutdown signal")
 
 	// Set timeout for graceful shutdown
 	ctx := context.Background()
