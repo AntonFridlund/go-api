@@ -3,7 +3,7 @@ package main
 import (
 	"context"
 	"fmt"
-	"main/middlewares/log"
+	"main/middlewares/logger"
 	"main/routes"
 	"net/http"
 	"os"
@@ -30,11 +30,11 @@ func main() {
 		IdleTimeout:       60 * time.Second,
 		Handler:           routes.NewRouter(),
 	}
-	server.Handler = log.LogMiddleware(server.Handler)
+	server.Handler = logger.LogMiddleware(server.Handler)
 
 	// Goroutine to process log entries
 	go func() {
-		for logEntry := range log.LogChannel {
+		for logEntry := range logger.LogChannel {
 			os.Stdout.Write([]byte(logEntry))
 		}
 	}()
@@ -56,7 +56,7 @@ func main() {
 	server.RegisterOnShutdown(func() {
 		fmt.Println("Initiating graceful shutdown")
 		defer graceWaitGroup.Done()
-		close(log.LogChannel)
+		close(logger.LogChannel)
 	})
 
 	// Wait for shutdown signal
