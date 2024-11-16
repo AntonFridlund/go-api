@@ -13,6 +13,7 @@ func isDomainSymbol(r rune) bool {
 	return r == '.' || r == '-'
 }
 
+// Email validation logic
 func IsValidEmail(email string) bool {
 	atIndex := strings.IndexByte(email, '@')
 	if atIndex < 1 || atIndex > len(email)-4 {

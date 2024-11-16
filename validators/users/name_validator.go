@@ -10,6 +10,7 @@ func IsValidLastName(name string) bool {
 	return validateName(name)
 }
 
+// Name validation logic
 func validateName(name string) bool {
 	if len(name) < 1 || len(name) > 80 || name[0] == '-' || name[len(name)-1] == '-' {
 		return false // Invalid name format
