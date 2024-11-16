@@ -2,6 +2,7 @@ package users
 
 import modelUser "main/models/users"
 
+// Service interface for dependency injection
 type IUserService interface {
 	GetAllUsers() ([]modelUser.UserDTO, error)
 	GetUserByID(id int) (modelUser.UserDTO, error)

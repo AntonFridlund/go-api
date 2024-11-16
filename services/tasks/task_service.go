@@ -2,6 +2,7 @@ package tasks
 
 import modelTask "main/models/tasks"
 
+// Service interface for dependency injection
 type ITaskService interface {
 	GetAllTasks() ([]modelTask.TaskDTO, error)
 	GetTaskByID(id int) (modelTask.TaskDTO, error)

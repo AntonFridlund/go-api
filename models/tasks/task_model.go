@@ -9,6 +9,7 @@ type Task struct {
 	Done        bool   `json:"done"`
 }
 
+// Model validation logic
 func (t *Task) Validate() error {
 	if len(t.Title) < 1 {
 		return errors.New("empty task title")

@@ -14,6 +14,7 @@ type User struct {
 	Password  string `json:"password"`
 }
 
+// Model validation logic
 func (u *User) Validate() error {
 	if !userValidator.IsValidFirstName(u.FirstName) {
 		return errors.New("invalid first name")
