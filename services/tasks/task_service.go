@@ -1,12 +1,12 @@
 package tasks
 
-import modelTask "main/models/tasks"
+import taskModel "main/models/tasks"
 
 // Service interface for dependency injection
 type ITaskService interface {
-	GetAllTasks() ([]modelTask.TaskDTO, error)
-	GetTaskByID(id int) (modelTask.TaskDTO, error)
-	CreateTask(task modelTask.Task) error
+	GetAllTasks() ([]taskModel.TaskDTO, error)
+	GetTaskByID(id int) (taskModel.TaskDTO, error)
+	CreateTask(task taskModel.TaskModel) error
 }
 
 type TaskService struct{}
@@ -15,8 +15,8 @@ func NewTaskService() *TaskService {
 	return &TaskService{}
 }
 
-func (s *TaskService) GetAllTasks() ([]modelTask.TaskDTO, error) {
-	taskModels := []modelTask.TaskDTO{
+func (s *TaskService) GetAllTasks() ([]taskModel.TaskDTO, error) {
+	tasks := []taskModel.TaskDTO{
 		{
 			ID:          1,
 			Title:       "Do this first",
@@ -30,19 +30,19 @@ func (s *TaskService) GetAllTasks() ([]modelTask.TaskDTO, error) {
 			Done:        false,
 		},
 	}
-	return taskModels, nil
+	return tasks, nil
 }
 
-func (s *TaskService) GetTaskByID(id int) (modelTask.TaskDTO, error) {
-	taskModel := modelTask.TaskDTO{
+func (s *TaskService) GetTaskByID(id int) (taskModel.TaskDTO, error) {
+	task := taskModel.TaskDTO{
 		ID:          id,
 		Title:       "A specific task",
 		Description: "A task which was fetched by ID",
 		Done:        true,
 	}
-	return taskModel, nil
+	return task, nil
 }
 
-func (s *TaskService) CreateTask(task modelTask.Task) error {
+func (s *TaskService) CreateTask(task taskModel.TaskModel) error {
 	return nil
 }

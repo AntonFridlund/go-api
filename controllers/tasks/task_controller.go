@@ -2,18 +2,18 @@ package tasks
 
 import (
 	"encoding/json"
-	modelTask "main/models/tasks"
-	serviceTask "main/services/tasks"
+	taskModel "main/models/tasks"
+	taskService "main/services/tasks"
 	"net/http"
 	"strconv"
 )
 
 // Represents the task controller
 type TaskController struct {
-	taskService serviceTask.ITaskService
+	taskService taskService.ITaskService
 }
 
-func NewTaskController(taskService serviceTask.ITaskService) *TaskController {
+func NewTaskController(taskService taskService.ITaskService) *TaskController {
 	return &TaskController{taskService: taskService}
 }
 
@@ -60,27 +60,27 @@ func (c *TaskController) GetTaskByID(w http.ResponseWriter, r *http.Request) {
 }
 
 func (c *TaskController) CreateTask(w http.ResponseWriter, r *http.Request) {
-	var taskModel modelTask.Task
-	if err := json.NewDecoder(r.Body).Decode(&taskModel); err != nil {
+	var task taskModel.TaskModel
+	if err := json.NewDecoder(r.Body).Decode(&task); err != nil {
 		http.Error(w, "Error: invalid task data"+err.Error(), http.StatusBadRequest)
 		return
 	}
 
-	if err := taskModel.Validate(); err != nil {
+	if err := task.Validate(); err != nil {
 		http.Error(w, "Error: "+err.Error(), http.StatusBadRequest)
 		return
 	}
 
-	if err := c.taskService.CreateTask(taskModel); err != nil {
+	if err := c.taskService.CreateTask(task); err != nil {
 		http.Error(w, "Error: failed to create task", http.StatusInternalServerError)
 		return
 	}
 
-	taskDTO := modelTask.TaskDTO{
-		ID:          taskModel.ID,
-		Title:       taskModel.Title,
-		Description: taskModel.Description,
-		Done:        taskModel.Done,
+	taskDTO := taskModel.TaskDTO{
+		ID:          task.ID,
+		Title:       task.Title,
+		Description: task.Description,
+		Done:        task.Done,
 	}
 
 	jsonData, err := json.Marshal(taskDTO)

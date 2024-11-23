@@ -2,7 +2,7 @@ package tasks
 
 import "errors"
 
-type Task struct {
+type TaskModel struct {
 	ID          int    `json:"id"`
 	Title       string `json:"title"`
 	Description string `json:"description"`
@@ -10,7 +10,7 @@ type Task struct {
 }
 
 // Model validation logic
-func (t *Task) Validate() error {
+func (t *TaskModel) Validate() error {
 	if len(t.Title) < 1 {
 		return errors.New("empty task title")
 	} else if len(t.Description) < 1 {
