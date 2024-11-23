@@ -33,7 +33,7 @@ func main() {
 		IdleTimeout:       60 * time.Second,
 		Handler:           routes.NewRouter(),
 	}
-	server.Handler = logger.LogMiddleware(server.Handler)
+	server.Handler = logger.LoggerMiddleware(server.Handler)
 
 	// Goroutine to process log entries
 	go func() {

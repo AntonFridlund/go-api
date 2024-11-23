@@ -9,7 +9,7 @@ import (
 // Needs a goroutine to process the log entries
 var LogChannel = make(chan string, 100)
 
-func LogMiddleware(next http.Handler) http.Handler {
+func LoggerMiddleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		start := time.Now()
 		rw := &responseWriter{w, http.StatusOK}
