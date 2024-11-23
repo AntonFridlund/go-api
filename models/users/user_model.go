@@ -6,7 +6,7 @@ import (
 	userValidator "main/validators/users"
 )
 
-type User struct {
+type UserModel struct {
 	ID        int    `json:"id"`
 	FirstName string `json:"first_name"`
 	LastName  string `json:"last_name"`
@@ -15,7 +15,7 @@ type User struct {
 }
 
 // Model validation logic
-func (u *User) Validate() error {
+func (u *UserModel) Validate() error {
 	if !userValidator.IsValidFirstName(u.FirstName) {
 		return errors.New("invalid first name")
 	} else if !userValidator.IsValidLastName(u.LastName) {

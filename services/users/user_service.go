@@ -1,12 +1,12 @@
 package users
 
-import modelUser "main/models/users"
+import userModel "main/models/users"
 
 // Service interface for dependency injection
 type IUserService interface {
-	GetAllUsers() ([]modelUser.UserDTO, error)
-	GetUserByID(id int) (modelUser.UserDTO, error)
-	CreateUser(user modelUser.User) error
+	GetAllUsers() ([]userModel.UserDTO, error)
+	GetUserByID(id int) (userModel.UserDTO, error)
+	CreateUser(user userModel.UserModel) error
 }
 
 type UserService struct{}
@@ -15,8 +15,8 @@ func NewUserService() *UserService {
 	return &UserService{}
 }
 
-func (s *UserService) GetAllUsers() ([]modelUser.UserDTO, error) {
-	userModels := []modelUser.UserDTO{
+func (s *UserService) GetAllUsers() ([]userModel.UserDTO, error) {
+	users := []userModel.UserDTO{
 		{
 			ID:        1,
 			FirstName: "John",
@@ -30,19 +30,19 @@ func (s *UserService) GetAllUsers() ([]modelUser.UserDTO, error) {
 			Email:     "jane.doe@example.com",
 		},
 	}
-	return userModels, nil
+	return users, nil
 }
 
-func (s *UserService) GetUserByID(id int) (modelUser.UserDTO, error) {
-	userModel := modelUser.UserDTO{
+func (s *UserService) GetUserByID(id int) (userModel.UserDTO, error) {
+	user := userModel.UserDTO{
 		ID:        id,
 		FirstName: "John",
 		LastName:  "Doe",
 		Email:     "john.doe@example.com",
 	}
-	return userModel, nil
+	return user, nil
 }
 
-func (s *UserService) CreateUser(user modelUser.User) error {
+func (s *UserService) CreateUser(user userModel.UserModel) error {
 	return nil
 }

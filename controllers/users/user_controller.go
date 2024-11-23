@@ -2,25 +2,25 @@ package users
 
 import (
 	"encoding/json"
-	modelUser "main/models/users"
-	serviceUser "main/services/users"
+	userModel "main/models/users"
+	userService "main/services/users"
 	"net/http"
 	"strconv"
 )
 
 // Represents the user controller
 type userController struct {
-	userService serviceUser.IUserService
+	userService userService.IUserService
 }
 
-func NewUserController(userService serviceUser.IUserService) *userController {
+func NewUserController(userService userService.IUserService) *userController {
 	return &userController{userService: userService}
 }
 
 func (c *userController) GetAllUsers(w http.ResponseWriter, r *http.Request) {
 	data, err := c.userService.GetAllUsers()
 	if err != nil {
-		http.Error(w, "Error: Failed to retrieve users", http.StatusInternalServerError)
+		http.Error(w, "Error: failed to retrieve users", http.StatusInternalServerError)
 		return
 	}
 
@@ -60,29 +60,29 @@ func (c *userController) GetUserByID(w http.ResponseWriter, r *http.Request) {
 }
 
 func (c *userController) CreateUser(w http.ResponseWriter, r *http.Request) {
-	var userModel modelUser.User
-	if err := json.NewDecoder(r.Body).Decode(&userModel); err != nil {
+	var user userModel.UserModel
+	if err := json.NewDecoder(r.Body).Decode(&user); err != nil {
 		http.Error(w, "Error: invalid user data", http.StatusBadRequest)
 		return
 	}
 
-	userModel.ID = 1234567890
+	user.ID = 1234567890
 
-	if err := userModel.Validate(); err != nil {
+	if err := user.Validate(); err != nil {
 		http.Error(w, "Error: "+err.Error(), http.StatusBadRequest)
 		return
 	}
 
-	if err := c.userService.CreateUser(userModel); err != nil {
+	if err := c.userService.CreateUser(user); err != nil {
 		http.Error(w, "Error: failed to create user", http.StatusInternalServerError)
 		return
 	}
 
-	userDTO := modelUser.UserDTO{
-		ID:        userModel.ID,
-		FirstName: userModel.FirstName,
-		LastName:  userModel.LastName,
-		Email:     userModel.Email,
+	userDTO := userModel.UserDTO{
+		ID:        user.ID,
+		FirstName: user.FirstName,
+		LastName:  user.LastName,
+		Email:     user.Email,
 	}
 
 	jsonData, err := json.Marshal(userDTO)
