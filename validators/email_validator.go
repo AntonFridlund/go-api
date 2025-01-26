@@ -19,7 +19,7 @@ func isASCIIDigit(r byte) bool {
 func isValidLocalPart(local string) bool {
 	for i := 0; i < len(local); i++ {
 		if !isASCIILetter(local[i]) && !isASCIIDigit(local[i]) {
-			if strings.IndexByte(domainSymbols, local[i]) < 1 || i == len(local)-1 {
+			if strings.IndexByte(localSymbols, local[i]) < 1 || i == len(local)-1 {
 				return false // Invalid symbol or position
 			} else if strings.IndexByte(localSymbols, local[i-1]) != -1 {
 				return false // Invalid consecutive symbols
