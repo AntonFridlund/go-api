@@ -2,8 +2,8 @@ package users
 
 import (
 	"errors"
-	"main/validators"
-	userValidator "main/validators/users"
+	"main/utils/validators"
+	userValidator "main/utils/validators/users"
 )
 
 type UserModel struct {
