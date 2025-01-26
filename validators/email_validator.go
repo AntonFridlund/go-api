@@ -1,56 +1,75 @@
 package validators
 
-import (
-	"strings"
-	"unicode"
+import "strings"
+
+const (
+	localSymbols     = "-._"
+	domainSymbols    = "-."
+	extensionSymbols = ""
 )
 
-func isLocalSymbol(r rune) bool {
-	return r == '.' || r == '-' || r == '_'
+func isASCIILetter(r byte) bool {
+	return r|32 >= 'a' && r|32 <= 'z'
 }
 
-func isDomainSymbol(r rune) bool {
-	return r == '.' || r == '-'
+func isASCIIDigit(r byte) bool {
+	return r >= '0' && r <= '9'
+}
+
+func isValidLocalPart(local string) bool {
+	for i := 0; i < len(local); i++ {
+		if !isASCIILetter(local[i]) && !isASCIIDigit(local[i]) {
+			if strings.IndexByte(domainSymbols, local[i]) < 1 || i == len(local)-1 {
+				return false // Invalid symbol or position
+			} else if strings.IndexByte(localSymbols, local[i-1]) != -1 {
+				return false // Invalid consecutive symbols
+			}
+		}
+	}
+	return true
+}
+
+func isValidDomainPart(domain string) bool {
+	for i := 0; i < len(domain); i++ {
+		if !isASCIILetter(domain[i]) && !isASCIIDigit(domain[i]) {
+			if strings.IndexByte(domainSymbols, domain[i]) < 1 || i == len(domain)-1 {
+				return false // Invalid symbol or position
+			} else if strings.IndexByte(domainSymbols, domain[i-1]) != -1 {
+				return !(domain[i] != '-' || domain[i-1] != '-' || domain[i-2] == '-')
+			}
+		}
+	}
+	return true
+}
+
+func isValidExtensionPart(extension string) bool {
+	for i := 0; i < len(extension); i++ {
+		if !isASCIILetter(extension[i]) {
+			return false // Invalid extension part structure
+		}
+	}
+	return true
 }
 
 // Email validation logic
 func IsValidEmail(email string) bool {
 	atIndex := strings.IndexByte(email, '@')
 	if atIndex < 1 || atIndex > len(email)-4 {
-		return false // Invalid @ index position
+		return false // Invalid @ position
+	}
+
+	lastDotIndex := strings.LastIndexByte(email, '.')
+	if lastDotIndex < 3 || lastDotIndex > len(email)-2 {
+		return false // Invalid last dot position
 	}
 
 	local := email[:atIndex]
-	domain := email[atIndex+1:]
-	if len(local) > 64 || len(domain) > 255 {
-		return false // Invalid local or domain length
+	domain := email[atIndex+1 : lastDotIndex]
+	extension := email[lastDotIndex+1:]
+
+	if len(local) > 64 || len(domain) > 253 || len(extension) > 63 {
+		return false // Invalid local, domain or extension length
 	}
 
-	if isDomainSymbol(rune(domain[0])) || isDomainSymbol(rune(domain[len(domain)-1])) {
-		return false // Invalid domain symbol position
-	} else if isLocalSymbol(rune(local[0])) || isLocalSymbol(rune(local[len(local)-1])) {
-		return false // Invalid local symbol position
-	}
-
-	var localCache rune
-	for _, r := range local {
-		if !unicode.IsLetter(r) && !unicode.IsDigit(r) {
-			if !isLocalSymbol(r) || isLocalSymbol(localCache) {
-				return false // Invalid local part structure
-			}
-		}
-		localCache = r
-	}
-
-	var domainCache rune
-	for i, r := range domain {
-		if !(r|32 >= 'a' && r|32 <= 'z') && !(r <= '9' && r >= '0') {
-			if !isDomainSymbol(r) || (r == '.' && (isDomainSymbol(domainCache) || isDomainSymbol(rune(domain[i+1])))) {
-				return false // Invalid domain part structure
-			}
-		}
-		domainCache = r
-	}
-
-	return strings.IndexByte(domain, '.') > -1
+	return isValidLocalPart(local) && isValidDomainPart(domain) && isValidExtensionPart(extension)
 }
